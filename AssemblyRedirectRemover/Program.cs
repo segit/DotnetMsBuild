@@ -15,9 +15,10 @@ var list = await path.GetConfigFiles()
         .ConfigureAwait(false);
 foreach(var item in list)
 {
+    item.RemoveAssemblyRedirect("System.ValueTuple");
     Console.WriteLine(item);
 }
 
-path = "./SampleData/App.config";
-path.RemoveAssemblyRedirect("System.ValueTuple");
+//path = "./SampleData/App.config";
+//path.RemoveAssemblyRedirect("System.ValueTuple");
 Console.WriteLine("Done!");
