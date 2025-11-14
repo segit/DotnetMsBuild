@@ -13,6 +13,10 @@ namespace AssemblyRedirectRemover
         /// and return all "*app.config*" and "*web.config*" files 
         /// excluding the ones in bin or obj directories.
         /// .git .vs .vscode directories should also be skipped
+        /// TODO:
+        /// add two specific files to the list 
+        /// Fusion.One\Shell\Telexy.Fusion.Shell\Config\Telexy.Fusion.App.Deployer.exe.config
+        /// Fusion.One\Shell\Telexy.Fusion.Shell\WebConfig.Master.template
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>

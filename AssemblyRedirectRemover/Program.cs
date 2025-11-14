@@ -10,14 +10,27 @@ var host = hab.Build();
 var conf = host.Services.GetRequiredService<IConfiguration>();
 var lf = host.Services.GetRequiredService<IHostApplicationLifetime>();
 
-string path = "C:\\tlx\\wsp1";
+
+string path = "C:\\tlx\\wsp8";
 var list = await path.GetConfigFiles()
         .ConfigureAwait(false);
-foreach(var item in list)
+
+//path = "./SampleData/App.config";
+//path.ChangeAssemblyRedirect("System.ValueTuple", "0.0.0.0-4.0.5.0", "4.0.0.0"); ;
+
+
+foreach (var item in list)
 {
-    item.RemoveAssemblyRedirect("System.ValueTuple");
+    item.ChangeAssemblyRedirect("System.ValueTuple", "0.0.0.0-4.0.5.0", "4.0.0.0");
     Console.WriteLine(item);
 }
+
+
+//foreach(var item in list)
+//{
+//    item.RemoveAssemblyRedirect("System.ValueTuple");
+//    Console.WriteLine(item);
+//}
 
 //path = "./SampleData/App.config";
 //path.RemoveAssemblyRedirect("System.ValueTuple");
