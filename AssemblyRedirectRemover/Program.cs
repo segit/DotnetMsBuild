@@ -19,11 +19,11 @@ var list = await path.GetConfigFiles()
 //path.ChangeAssemblyRedirect("System.ValueTuple", "0.0.0.0-4.0.5.0", "4.0.0.0"); ;
 
 
-foreach (var item in list)
-{
-    item.ChangeAssemblyRedirect("System.ValueTuple", "0.0.0.0-4.0.5.0", "4.0.0.0");
-    Console.WriteLine(item);
-}
+//foreach (var item in list)
+//{
+//    item.ChangeAssemblyRedirect("System.ValueTuple", "0.0.0.0-4.0.5.0", "4.0.0.0");
+//    Console.WriteLine(item);
+//}
 
 
 //foreach(var item in list)
