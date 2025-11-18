@@ -26,7 +26,7 @@ var list = await path.GetConfigFiles()
 //}
 
 
-//foreach(var item in list)
+//foreach (var item in list)
 //{
 //    item.RemoveAssemblyRedirect("System.ValueTuple");
 //    Console.WriteLine(item);
