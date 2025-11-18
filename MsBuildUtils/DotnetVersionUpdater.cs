@@ -56,7 +56,7 @@ namespace MsBuildUtils
                 // Find all TargetFramework and TargetFrameworks elements
                 var ns = doc.Root?.Name.Namespace ?? XNamespace.None;
                 var targetFrameworkElements = doc.Descendants(ns + "TargetFramework").ToList();
-                var targetFrameworksElements = doc.Descendants(ns + "TargetFrameworks").ToList();
+               
 
                 var changed = false;
 
@@ -78,6 +78,8 @@ namespace MsBuildUtils
 
                 #region ref
                 /*
+                var targetFrameworksElements = doc.Descendants(ns + "TargetFrameworks").ToList();
+
                 // Update multi-target frameworks
                 foreach (var tfs in targetFrameworksElements)
                 {
