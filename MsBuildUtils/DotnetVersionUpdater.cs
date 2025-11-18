@@ -128,17 +128,55 @@ namespace MsBuildUtils
         }
     
         
-        //TODO
-        /// <summary>
+         /// <summary>
         /// Loops through all projects in the solution and updates dotnet verision
         /// to the newVersion provided
         /// </summary>
         /// <param name="slnxFile"></param>
         /// <param name="newVersion"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public static void UpdateAllDotnetVersionsTo(string slnxFile, string newVersion)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(slnxFile))
+                throw new ArgumentException("Solution file path must be provided.", nameof(slnxFile));
+
+            if (string.IsNullOrWhiteSpace(newVersion))
+                throw new ArgumentException("New version must be provided.", nameof(newVersion));
+
+            if (!File.Exists(slnxFile))
+                throw new FileNotFoundException("Solution file not found.", slnxFile);
+
+            var solutionDir = Path.GetDirectoryName(slnxFile) ?? string.Empty;
+            var failures = new List<Exception>();
+
+            foreach (var projPath in ProjectFilesEnumerator.Enumerate(slnxFile))
+            {
+                if (string.IsNullOrWhiteSpace(projPath))
+                    continue;
+
+                // Combine with solution directory to form an absolute path
+                var combined = Path.GetFullPath(Path.Combine(solutionDir, projPath));
+
+                if (!File.Exists(combined))
+                {
+                    // Skip missing project files
+                    continue;
+                }
+
+                try
+                {
+                    UpdateDotnetVerisonTo(combined, newVersion);
+                }
+                catch (Exception ex)
+                {
+                    // Collect error and continue with other projects
+                    failures.Add(new InvalidOperationException($"Failed to update project '{combined}': {ex.Message}", ex));
+                }
+            }
+
+            if (failures.Any())
+            {
+                throw new AggregateException("One or more projects failed to update.", failures);
+            }
         }
     }
 }

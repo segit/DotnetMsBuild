@@ -15,7 +15,7 @@ public class DotnetVersionUpdaterTest
     /// to test DotnetVersionUpdater
     /// </summary>
     [Fact]
-    public void CanUpdateDotnetVersion()
+    public void CanUpdateProjectDotnetVersion()
     {
         string ver = "net10.0";
         var sample = Path.GetFullPath("SampleData/Ase.Cmd/Ase.Cmd.csproj");
@@ -39,5 +39,13 @@ public class DotnetVersionUpdaterTest
         {
             try { File.Delete(tmp); } catch { }
         }
+    }
+
+    /// <summary>
+    /// Uses SampleData/Ase.WebApi.slnx file
+    /// to test DotnetVersionUpdater.UpdateAllDotnetVersionsTo
+    /// </summary>
+    public void CanUpdateSlnxDotnetVersion()
+    {
     }
 }
