@@ -19,7 +19,7 @@ public class ProjectFileEnumeratorTest
         var proj1 = list.Where(fi => fi.Name == "Ase.Cmd.csproj").Single();
         Assert.True(proj1.Exists);
 
-        var proj2 = list.Where(fi => fi.Name == "Ase.Ef.Core.csproj.csproj").Single();
-        Assert.False(proj1.Exists);
+        var proj2 = list.Where(fi => fi.Name == "Ase.Ef.Core.csproj").Single();
+        Assert.False(proj2.Exists);
     }
 }
