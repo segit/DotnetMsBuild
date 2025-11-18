@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="AssemblyRedirectRemover/AssemblyRedirectRemover.csproj" />
+  <Project Path="MsBuildUtils.Test/MsBuildUtils.Test.csproj" />
+  <Project Path="MsBuildUtils/MsBuildUtils.csproj" />
+</Solution>

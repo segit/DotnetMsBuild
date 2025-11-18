@@ -1,0 +1,57 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="ARM" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Archive/">
+    <Project Path="Ase.EF.Migrations/Ase.EF.Migrations.csproj" />
+    <Project Path="Ase.EF/Ase.EF.csproj" />
+    <Project Path="Ase.Models/Ase.Models.csproj" />
+  </Folder>
+  <Folder Name="/BeadTrim/">
+    <Project Path="BeadTrim/Ase.BeadTrim.Abstractions/Ase.BeadTrim.Abstractions.csproj" />
+    <Project Path="BeadTrim/Ase.BeadTrim/Ase.BeadTrim.csproj" />
+  </Folder>
+  <Folder Name="/Cli/">
+    <Project Path="Ase.Cmd/Ase.Cmd.csproj" />
+  </Folder>
+  <Folder Name="/Shopify/">
+    <Project Path="Ase.Shopify.Abstractions/Ase.Shopify.Abstractions.csproj" />
+    <Project Path="Ase.Shopify.App/Ase.Shopify.App.csproj" />
+    <Project Path="Ase.Shopify.Graphql/Ase.Shopify.Graphql.csproj" />
+    <Project Path="Ase.Shopify/Ase.Shopify.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".editorconfig.inferred" />
+    <File Path="nuget.config" />
+  </Folder>
+  <Folder Name="/Tools/">
+    <File Path="Tools/after_publish.ps1" />
+    <File Path="Tools/ase_deploy_helpers.psm1" />
+    <File Path="Tools/before_publish.ps1" />
+    <File Path="Tools/create_service.ps1" />
+  </Folder>
+  <Folder Name="/Tools/tests/">
+    <File Path="Tools/create_service_ase_webui.ps1" />
+    <File Path="Tools/tests/test_after_script.ps1" />
+    <File Path="Tools/tests/test_before_script.ps1" />
+    <File Path="Tools/tests/test_remove_item.ps1" />
+  </Folder>
+  <Project Path="Ase.Abstractions/Ase.Abstractions.csproj" />
+  <Project Path="Ase.Annotations/Ase.Annotations.csproj" />
+  <Project Path="Ase.App.Base/Ase.App.Base.csproj" />
+  <Project Path="Ase.App/Ase.App.csproj" />
+  <Project Path="Ase.AspNetCore.Extensions/Ase.AspNetCore.Extensions.csproj" />
+  <Project Path="Ase.Ef.Core.Migrations/Ase.Ef.Core.Migrations.csproj" />
+  <Project Path="Ase.Ef.Core/Ase.Ef.Core.csproj" />
+  <Project Path="Ase.Infrastructure/Ase.Infrastructure.csproj" />
+  <Project Path="Ase.Models.Core/Ase.Models.Core.csproj" />
+  <Project Path="Ase.Rest/Ase.Rest.csproj" />
+  <Project Path="Ase.WebApi.Min/Ase.WebApi.Min.csproj" />
+  <Project Path="Ase.WebApi/Ase.WebApi.csproj" />
+  <Project Path="Ase.WebUi/Ase.WebUi.csproj" />
+  <Project Path="ConsoleApp/ConsoleApp.csproj" />
+</Solution>
