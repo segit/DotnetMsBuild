@@ -8,6 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="SampleData\Ase.Cmd\Ase.Cmd.csproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="SampleData\Ase.WebApi.slnx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
