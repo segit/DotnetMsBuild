@@ -41,11 +41,57 @@ public class DotnetVersionUpdaterTest
         }
     }
 
+    // TODO
     /// <summary>
     /// Uses SampleData/Ase.WebApi.slnx file
     /// to test DotnetVersionUpdater.UpdateAllDotnetVersionsTo
     /// </summary>
+    [Fact]
     public void CanUpdateSlnxDotnetVersion()
     {
+        string ver = "net10.0";
+        var sampleSln = Path.GetFullPath("SampleData/Ase.WebApi.slnx");
+        Assert.True(File.Exists(sampleSln), $"Sample solution not found: {sampleSln}");
+
+        var tmpDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        Directory.CreateDirectory(tmpDir);
+        var tmpSln = Path.Combine(tmpDir, "Ase.WebApi.slnx");
+        File.Copy(sampleSln, tmpSln);
+
+        // Only copy a couple of project files referenced by the solution so the updater
+        // has some files to operate on.
+        var filesToCopy = new[] {
+            "Ase.Cmd/Ase.Cmd.csproj",
+            "Ase.Infrastructure/Ase.Infrastructure.csproj"
+        };
+
+        try
+        {
+            var sampleDir = Path.GetDirectoryName(sampleSln) ?? string.Empty;
+
+            foreach (var rel in filesToCopy)
+            {
+                var src = Path.GetFullPath(Path.Combine(sampleDir, rel));
+                var dest = Path.Combine(tmpDir, rel);
+                Directory.CreateDirectory(Path.GetDirectoryName(dest) ?? tmpDir);
+                File.Copy(src, dest);
+            }
+
+            MsBuildUtils.DotnetVersionUpdater.UpdateAllDotnetVersionsTo(tmpSln, ver);
+
+            foreach (var rel in filesToCopy)
+            {
+                var dest = Path.Combine(tmpDir, rel);
+                var doc = XDocument.Load(dest);
+                var ns = doc.Root?.Name.Namespace ?? XNamespace.None;
+                var tf = doc.Descendants(ns + "TargetFramework").FirstOrDefault();
+                Assert.NotNull(tf);
+                Assert.Equal(ver, tf.Value);
+            }
+        }
+        finally
+        {
+            try { Directory.Delete(tmpDir, true); } catch { }
+        }
     }
 }
