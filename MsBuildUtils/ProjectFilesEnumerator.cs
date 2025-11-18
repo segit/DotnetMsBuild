@@ -11,6 +11,6 @@ public static class ProjectFilesEnumerator
     /// <returns>An enumerable collection of project file paths contained in the solution.</returns>
     public static IEnumerable<string> Enumerate(string solution)
     {
-
+        throw new NotImplementedException();
     }
 }
