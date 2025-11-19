@@ -41,7 +41,6 @@ public class DotnetVersionUpdaterTest
         }
     }
 
-    // TODO
     /// <summary>
     /// Uses SampleData/Ase.WebApi.slnx file
     /// to test DotnetVersionUpdater.UpdateAllDotnetVersionsTo

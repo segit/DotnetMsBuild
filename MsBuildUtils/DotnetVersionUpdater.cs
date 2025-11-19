@@ -16,6 +16,7 @@ namespace MsBuildUtils
         /// writable and that the provided .NET version string is compatible with the project.</remarks>
         /// <param name="projFile">The path to the project file to be updated. Must not be null or empty.</param>
         /// <param name="newVersion">The new .NET version to set in the project file. Must be a valid .NET version string.</param>
+        [Obsolete("Use DotnetVersionUpdaterM instead")]
         public static void UpdateDotnetVerisonTo(string projFile, string newVersion)
         {
             if (string.IsNullOrWhiteSpace(projFile))
@@ -108,14 +109,15 @@ namespace MsBuildUtils
                 throw new InvalidOperationException($"Failed to update project file '{projFile}': {ex.Message}", ex);
             }
         }
-    
-        
-         /// <summary>
+
+
+        /// <summary>
         /// Loops through all projects in the solution and updates dotnet verision
         /// to the newVersion provided
         /// </summary>
         /// <param name="slnxFile"></param>
         /// <param name="newVersion"></param>
+        [Obsolete("Use DotnetVersionUpdaterM instead")]
         public static void UpdateAllDotnetVersionsTo(string slnxFile, string newVersion)
         {
             if (string.IsNullOrWhiteSpace(slnxFile))
