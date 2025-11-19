@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
+using System.Xml.Linq;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace MsBuildUtils
 {
@@ -19,6 +23,76 @@ namespace MsBuildUtils
         /// <param name="newVersion">The new .NET version to set in the project file. Must be a valid .NET version string.</param>
         public static void UpdateDotnetVerisonTo(string projFile, string[] oldVersions, string newVersion)
         {
+            if (string.IsNullOrWhiteSpace(projFile))
+                throw new ArgumentException("Project file path must be provided.", nameof(projFile));
+
+            if (oldVersions == null || oldVersions.Length == 0)
+                throw new ArgumentException("At least one old version must be provided.", nameof(oldVersions));
+
+            if (string.IsNullOrWhiteSpace(newVersion))
+                throw new ArgumentException("New version must be provided.", nameof(newVersion));
+
+            if (!File.Exists(projFile))
+                throw new FileNotFoundException("Project file not found.", projFile);
+
+            string Normalize(string v)
+            {
+                if (v == null) return string.Empty;
+                v = v.Trim();
+                if (v.StartsWith("net", StringComparison.OrdinalIgnoreCase))
+                    return v;
+
+                if (Regex.IsMatch(v, "^\\d+(\\.\\d+)?$"))
+                {
+                    // If user supplies a numeric value like "10" or "10.0", prefix with "net"
+                    return "net" + v;
+                }
+
+                // fallback
+                return v;
+            }
+
+            var normalizedNew = Normalize(newVersion);
+            var normalizedOld = oldVersions.Select(Normalize)
+                                           .Where(x => !string.IsNullOrEmpty(x))
+                                           .Select(x => x.ToLowerInvariant())
+                                           .ToHashSet();
+
+            try
+            {
+                var doc = XDocument.Load(projFile);
+                var ns = doc.Root?.Name.Namespace ?? XNamespace.None;
+                var targetFrameworkElements = doc.Descendants(ns + "TargetFramework").ToList();
+
+                var changed = false;
+
+                foreach (var tf in targetFrameworkElements)
+                {
+                    var val = (tf.Value ?? string.Empty).Trim();
+                    if (string.IsNullOrEmpty(val))
+                        continue;
+
+                    var norm = Normalize(val).ToLowerInvariant();
+                    if (normalizedOld.Contains(norm))
+                    {
+                        tf.Value = normalizedNew;
+                        changed = true;
+                    }
+                }
+
+                if (changed)
+                {
+                    doc.Save(projFile);
+                }
+                else
+                {
+                    throw new InvalidOperationException("No matching TargetFramework entries found to update.");
+                }
+            }
+            catch (Exception ex) when (!(ex is ArgumentException) && !(ex is FileNotFoundException))
+            {
+                throw new InvalidOperationException($"Failed to update project file '{projFile}': {ex.Message}", ex);
+            }
         }
     }
 }
