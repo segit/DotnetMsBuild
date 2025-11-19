@@ -4,7 +4,6 @@ using System.Text;
 using System.IO;
 using System.Xml.Linq;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace MsBuildUtils
 {
@@ -28,24 +27,7 @@ namespace MsBuildUtils
             if (!File.Exists(projFile))
                 throw new FileNotFoundException("Project file not found.", projFile);
 
-            // Normalize the provided version to an MSBuild framework moniker if needed
-            string Normalize(string v)
-            {
-                v = v.Trim();
-                if (v.StartsWith("net", StringComparison.OrdinalIgnoreCase))
-                    return v;
-
-                // If user supplies a numeric value like "10" or "10.0", prefix with "net"
-                if (Regex.IsMatch(v, "^\\d+(\\.\\d+)?$"))
-                {
-                    return "net" + v;
-                }
-
-                // Fallback: return as-is
-                return v;
-            }
-
-            var normalized = Normalize(newVersion);
+            var normalized = VersionNormalizer.Normalize(newVersion);
 
             try
             {

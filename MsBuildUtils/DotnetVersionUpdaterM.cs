@@ -4,7 +4,6 @@ using System.Text;
 using System.IO;
 using System.Xml.Linq;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace MsBuildUtils
 {
@@ -35,25 +34,8 @@ namespace MsBuildUtils
             if (!File.Exists(projFile))
                 throw new FileNotFoundException("Project file not found.", projFile);
 
-            string Normalize(string v)
-            {
-                if (v == null) return string.Empty;
-                v = v.Trim();
-                if (v.StartsWith("net", StringComparison.OrdinalIgnoreCase))
-                    return v;
-
-                if (Regex.IsMatch(v, "^\\d+(\\.\\d+)?$"))
-                {
-                    // If user supplies a numeric value like "10" or "10.0", prefix with "net"
-                    return "net" + v;
-                }
-
-                // fallback
-                return v;
-            }
-
-            var normalizedNew = Normalize(newVersion);
-            var normalizedOld = oldVersions.Select(Normalize)
+            var normalizedNew = VersionNormalizer.Normalize(newVersion);
+            var normalizedOld = oldVersions.Select(VersionNormalizer.Normalize)
                                            .Where(x => !string.IsNullOrEmpty(x))
                                            .Select(x => x.ToLowerInvariant())
                                            .ToHashSet();
@@ -72,7 +54,7 @@ namespace MsBuildUtils
                     if (string.IsNullOrEmpty(val))
                         continue;
 
-                    var norm = Normalize(val).ToLowerInvariant();
+                    var norm = VersionNormalizer.Normalize(val).ToLowerInvariant();
                     if (normalizedOld.Contains(norm))
                     {
                         tf.Value = normalizedNew;
