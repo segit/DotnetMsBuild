@@ -98,9 +98,10 @@ namespace MsBuildUtils
                 throw new ArgumentException("New version must be provided.", nameof(newVersion));
 
             if (!File.Exists(slnxFile))
-                throw new FileNotFoundException("Solution file not found.", slnxFile);
+                throw new FileNotFoundException($"Solution file not found.", slnxFile);
 
             var solutionDir = Path.GetDirectoryName(slnxFile) ?? string.Empty;
+
             var failures = new List<Exception>();
 
             foreach (var projPath in ProjectFilesEnumerator.Enumerate(slnxFile))
