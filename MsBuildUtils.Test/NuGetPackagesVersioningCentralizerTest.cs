@@ -32,28 +32,49 @@ namespace MsBuildUtils.Test
 
             try
             {
+                // Load original project to count PackageReferences with Version attributes
+                var originalProjDoc = XDocument.Load(tmpProj);
+                var originalNs = originalProjDoc.Root?.Name.Namespace ?? XNamespace.None;
+                var originalPackageReferencesWithVersion = originalProjDoc.Descendants(originalNs + "PackageReference")
+                    .Where(pr => pr.Attribute("Include") != null && pr.Attribute("Version") != null)
+                    .ToList();
+                var originalCount = originalPackageReferencesWithVersion.Count;
+
+                Assert.True(originalCount > 0, "Sample project should have PackageReferences with Version attributes");
+
                 var result = NugetPmCentralyzer.MoveVersionsToCentralStore(tmpProj, tmpProps);
 
                 Assert.True(result, "Expected method to return true indicating packages were added");
 
+                // Verify PackageVersion elements were added to Directory.Packages.props
                 var propsDoc = XDocument.Load(tmpProps);
                 var ns = propsDoc.Root?.Name.Namespace ?? XNamespace.None;
                 var packageVersions = propsDoc.Descendants(ns + "PackageVersion").ToList();
 
                 Assert.NotEmpty(packageVersions);
+                Assert.Equal(originalCount, packageVersions.Count);
 
+                // Verify Version attributes were removed from PackageReference elements
                 var projDoc = XDocument.Load(tmpProj);
                 var projNs = projDoc.Root?.Name.Namespace ?? XNamespace.None;
-                var packageReferences = projDoc.Descendants(projNs + "PackageReference")
+                var packageReferencesWithVersion = projDoc.Descendants(projNs + "PackageReference")
                     .Where(pr => pr.Attribute("Include") != null && pr.Attribute("Version") != null)
                     .ToList();
 
-                Assert.Equal(packageReferences.Count, packageVersions.Count);
+                Assert.Empty(packageReferencesWithVersion);
 
-                foreach (var packageRef in packageReferences)
+                // Verify all PackageReferences still exist (just without Version attribute)
+                var allPackageReferences = projDoc.Descendants(projNs + "PackageReference")
+                    .Where(pr => pr.Attribute("Include") != null)
+                    .ToList();
+
+                Assert.True(allPackageReferences.Count >= originalCount, "PackageReference elements should still exist");
+
+                // Verify each original package has a corresponding PackageVersion in props file
+                foreach (var originalPackageRef in originalPackageReferencesWithVersion)
                 {
-                    var packageName = packageRef.Attribute("Include")?.Value;
-                    var version = packageRef.Attribute("Version")?.Value;
+                    var packageName = originalPackageRef.Attribute("Include")?.Value;
+                    var version = originalPackageRef.Attribute("Version")?.Value;
 
                     var matchingPackageVersion = packageVersions.FirstOrDefault(pv =>
                         pv.Attribute("Include")?.Value == packageName &&

@@ -9,13 +9,6 @@ namespace MsBuildUtils
 {
     public class NugetPmCentralyzer
     {
-        // TODO: 
-        // The method description was clarified with the follwoing:
-        // Then it removes the Version attribute from the PackageReverence element
-        // in a  project file.
-        // Please fix the implementation to match the description and change the test
-        // to test it.
-
         /// <summary>
         /// Prepares project to switch to Centralized Package Management (CPM)
         /// https://learn.microsoft.com/en-us/nuget/consume-packages/central-package-management
@@ -94,11 +87,15 @@ namespace MsBuildUtils
                         existingPackageVersions.Add(packageName);
                         added = true;
                     }
+
+                    // Remove the Version attribute from the PackageReference element
+                    packageRef.Attribute("Version")?.Remove();
                 }
 
                 if (added)
                 {
                     propsDoc.Save(packagesProps);
+                    projDoc.Save(csProj);
                     return true;
                 }
 
