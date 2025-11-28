@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace MsBuildUtils
 {
     public class NugetPmCentralyzer
     {
-        // TODO:
-        // Implement the method as described.
-        // Then implement the test case as described in TODO section 
-        // in the 
-        // MsBuildUtils.Test\NuGetPackagesVersioningCentralizerTest.cs
-
-
         /// <summary>
         /// Prepares project to switch to Centralized Package Management (CPM)
         /// https://learn.microsoft.com/en-us/nuget/consume-packages/central-package-management
@@ -30,10 +26,78 @@ namespace MsBuildUtils
         /// </summary>
         /// <param name="csProj">Path to MsBuild SDK style .csproj file</param>
         /// <param name="packagesProps">Path MsBuild Directory.Packages.props</param>
-        /// <returns></returns>
-        public static bool MoveNugetPackageVersionsToDirectoryPackagetPropsProps(string csProj, string packagesProps)
+        /// <returns>True if any PackageVersion elements were added, false otherwise</returns>
+        public static bool MoveNugetPackageVersionsToDirectoryPackagePropsProps(string csProj, string packagesProps)
         {
-            throw new NotImplementedException();
+            ArgumentException.ThrowIfNullOrWhiteSpace(csProj);
+            ArgumentException.ThrowIfNullOrWhiteSpace(packagesProps);
+
+            if (!File.Exists(csProj))
+                throw new FileNotFoundException($"Project file not found.", csProj);
+
+            if (!File.Exists(packagesProps))
+                throw new FileNotFoundException($"Directory.Packages.props file not found.", packagesProps);
+
+            try
+            {
+                var projDoc = XDocument.Load(csProj);
+                var propsDoc = XDocument.Load(packagesProps);
+
+                var projNs = projDoc.Root?.Name.Namespace ?? XNamespace.None;
+                var propsNs = propsDoc.Root?.Name.Namespace ?? XNamespace.None;
+
+                var packageReferences = projDoc.Descendants(projNs + "PackageReference")
+                    .Where(pr => pr.Attribute("Include") != null && pr.Attribute("Version") != null)
+                    .ToList();
+
+                if (packageReferences.Count == 0)
+                    return false;
+
+                var propsItemGroup = propsDoc.Descendants(propsNs + "ItemGroup").FirstOrDefault();
+                if (propsItemGroup == null)
+                {
+                    propsItemGroup = new XElement(propsNs + "ItemGroup");
+                    propsDoc.Root?.Add(propsItemGroup);
+                }
+
+                var existingPackageVersions = propsItemGroup.Elements(propsNs + "PackageVersion")
+                    .Select(pv => pv.Attribute("Include")?.Value)
+                    .Where(v => !string.IsNullOrEmpty(v))
+                    .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+                bool added = false;
+
+                foreach (var packageRef in packageReferences)
+                {
+                    var packageName = packageRef.Attribute("Include")?.Value;
+                    var version = packageRef.Attribute("Version")?.Value;
+
+                    if (string.IsNullOrWhiteSpace(packageName) || string.IsNullOrWhiteSpace(version))
+                        continue;
+
+                    if (!existingPackageVersions.Contains(packageName))
+                    {
+                        var packageVersion = new XElement(propsNs + "PackageVersion");
+                        packageVersion.SetAttributeValue("Include", packageName);
+                        packageVersion.SetAttributeValue("Version", version);
+                        propsItemGroup.Add(packageVersion);
+                        existingPackageVersions.Add(packageName);
+                        added = true;
+                    }
+                }
+
+                if (added)
+                {
+                    propsDoc.Save(packagesProps);
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex) when (!(ex is ArgumentException) && !(ex is FileNotFoundException))
+            {
+                throw new InvalidOperationException($"Failed to process package references: {ex.Message}", ex);
+            }
         }
     }
 }
