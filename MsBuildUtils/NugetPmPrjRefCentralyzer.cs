@@ -7,7 +7,7 @@ using System.Xml.Linq;
 
 namespace MsBuildUtils
 {
-    public class NugetPmCentralyzer
+    public class NugetPmPrjRefCentralyzer
     {
         /// <summary>
         /// Prepares project to switch to Centralized Package Management (CPM)

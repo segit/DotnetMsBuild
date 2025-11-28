@@ -8,15 +8,15 @@ using Xunit;
 
 namespace MsBuildUtils.Test
 {
-    public class NuGetPackagesVersioningCentralizerTest
+    public class NugetPmPrjRefCentralyzer
     {
         /// <summary>
-        /// Tests the NugetPmCentralyzer.MoveVersionsToCentralStore method
+        /// Tests the <see cref="MsBuildUtils.NugetPmPrjRefCentralyzer.MoveVersionsToCentralStore"/> method
         /// using sample data files to ensure PackageReferences from the project file
         /// are properly added as PackageVersion elements to Directory.Packages.props
         /// </summary>
         [Fact]
-        public void CanCentralizePackagesVersioning()
+        public void CanMovePrjRefsVersioning()
         {
             var sampleProj = Path.GetFullPath("SampleData/Ase.Cmd/Ase.Cmd.csproj");
             var sampleProps = Path.GetFullPath("SampleData/Directory.Packages.props");
@@ -42,7 +42,7 @@ namespace MsBuildUtils.Test
 
                 Assert.True(originalCount > 0, "Sample project should have PackageReferences with Version attributes");
 
-                var result = NugetPmCentralyzer.MoveVersionsToCentralStore(tmpProj, tmpProps);
+                var result = MsBuildUtils.NugetPmPrjRefCentralyzer.MoveVersionsToCentralStore(tmpProj, tmpProps);
 
                 Assert.True(result, "Expected method to return true indicating packages were added");
 
@@ -83,7 +83,7 @@ namespace MsBuildUtils.Test
                     Assert.NotNull(matchingPackageVersion);
                 }
 
-                var resultSecondCall = NugetPmCentralyzer.MoveVersionsToCentralStore(tmpProj, tmpProps);
+                var resultSecondCall = MsBuildUtils.NugetPmPrjRefCentralyzer.MoveVersionsToCentralStore(tmpProj, tmpProps);
                 Assert.False(resultSecondCall, "Expected method to return false when packages already exist");
             }
             finally
