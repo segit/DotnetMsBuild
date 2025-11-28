@@ -11,7 +11,7 @@ namespace MsBuildUtils.Test
     public class NuGetPackagesVersioningCentralizerTest
     {
         /// <summary>
-        /// Tests the NugetPmCentralyzer.MoveNugetPackageVersionsToDirectoryPackagePropsProps method
+        /// Tests the NugetPmCentralyzer.MoveVersionsToCentralStore method
         /// using sample data files to ensure PackageReferences from the project file
         /// are properly added as PackageVersion elements to Directory.Packages.props
         /// </summary>
@@ -32,7 +32,7 @@ namespace MsBuildUtils.Test
 
             try
             {
-                var result = NugetPmCentralyzer.MoveNugetPackageVersionsToDirectoryPackagePropsProps(tmpProj, tmpProps);
+                var result = NugetPmCentralyzer.MoveVersionsToCentralStore(tmpProj, tmpProps);
 
                 Assert.True(result, "Expected method to return true indicating packages were added");
 
@@ -62,7 +62,7 @@ namespace MsBuildUtils.Test
                     Assert.NotNull(matchingPackageVersion);
                 }
 
-                var resultSecondCall = NugetPmCentralyzer.MoveNugetPackageVersionsToDirectoryPackagePropsProps(tmpProj, tmpProps);
+                var resultSecondCall = NugetPmCentralyzer.MoveVersionsToCentralStore(tmpProj, tmpProps);
                 Assert.False(resultSecondCall, "Expected method to return false when packages already exist");
             }
             finally

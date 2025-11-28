@@ -9,6 +9,13 @@ namespace MsBuildUtils
 {
     public class NugetPmCentralyzer
     {
+        // TODO: 
+        // The method description was clarified with the follwoing:
+        // Then it removes the Version attribute from the PackageReverence element
+        // in a  project file.
+        // Please fix the implementation to match the description and change the test
+        // to test it.
+
         /// <summary>
         /// Prepares project to switch to Centralized Package Management (CPM)
         /// https://learn.microsoft.com/en-us/nuget/consume-packages/central-package-management
@@ -18,6 +25,9 @@ namespace MsBuildUtils
         /// it loops through all PackageReference elements present in project file.
         /// Fore each PackageReference it adds PackageVersion element
         /// to the Directory.Packages.props file if the one does not exists yet.
+        /// Then it removes the Version attribute from the PackageReverence element
+        /// in a  project file.
+        /// 
         /// Examples of elements
         ///     PackageReference element:
         ///         <PackageReference Include="SomeRandomPackage" Version="X.X.XX" />
@@ -27,7 +37,7 @@ namespace MsBuildUtils
         /// <param name="csProj">Path to MsBuild SDK style .csproj file</param>
         /// <param name="packagesProps">Path MsBuild Directory.Packages.props</param>
         /// <returns>True if any PackageVersion elements were added, false otherwise</returns>
-        public static bool MoveNugetPackageVersionsToDirectoryPackagePropsProps(string csProj, string packagesProps)
+        public static bool MoveVersionsToCentralStore(string csProj, string packagesProps)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(csProj);
             ArgumentException.ThrowIfNullOrWhiteSpace(packagesProps);
