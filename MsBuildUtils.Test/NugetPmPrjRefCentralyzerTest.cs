@@ -8,7 +8,7 @@ using Xunit;
 
 namespace MsBuildUtils.Test
 {
-    public class NugetPmPrjRefCentralyzer
+    public class NugetPmPrjRefCentralyzerTest
     {
         /// <summary>
         /// Tests the <see cref="MsBuildUtils.NugetPmPrjRefCentralyzer.MoveVersionsToCentralStore"/> method
