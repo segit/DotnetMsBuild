@@ -16,7 +16,7 @@ ArgumentException.ThrowIfNullOrWhiteSpace(asep);
 string sln = Path.GetFullPath($"{asep}/src/Ase.WebApi.slnx");
 //DotnetVersionUpdaterM
 //    .UpdateAllDotnetVersionsTo(sln, new string[] { "8.0", "9.0" }, "net10.0");
-new NugetPmSlnRefCentralizer()
-    .MovePackageVersionsToCentralStore(sln);
+//new NugetPmSlnRefCentralizer()
+//    .MovePackageVersionsToCentralStore(sln);
 
 Console.WriteLine("Done!");
