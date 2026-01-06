@@ -2,6 +2,25 @@
 
 namespace AssemblyRedirectRemover
 {
+    //TODO:
+    // implement the procedure
+    /// <summary>
+    /// Enumerates all app.config and web.config files in the directory and subdirectories
+    /// Calls RemoveAssemblyRedirect on that file
+    /// <dependentAssembly>
+    ///   <assemblyIdentity name = "System.ValueTuple" publicKeyToken="cc7b13ffcd2ddd51" culture="neutral" />
+    ///   <bindingRedirect oldVersion = "0.0.0.0-4.0.3.0" newVersion="4.0.3.0" />
+    /// </dependentAssembly>
+    /// from the file if found.
+    /// see sample of the file:
+    /// SamplesData/App.Config
+    /// </summary>
+    /// <param name="filepath"></param>
+    /// <param name="assemblyShortName">assembly short name e.g. System.ValueTuple</param>
+    internal static void RemoveAssemblyRedirectsInDirectory(this string dir, string assemblyShortName)
+    {
+    }
+
     internal static class AssemblyRedirectsRemover
     {
        
@@ -15,11 +34,11 @@ namespace AssemblyRedirectRemover
         /// see sample of the file:
         /// SamplesData/App.Config
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="filepath"></param>
         /// <param name="assemblyShortName">assembly short name e.g. System.ValueTuple</param>
-        internal static void RemoveAssemblyRedirect(this string path, string assemblyShortName)
+        internal static void RemoveAssemblyRedirect(this string filepath, string assemblyShortName)
         {
-            if (!File.Exists(path))
+            if (!File.Exists(filepath))
                 return;
 
             if (string.IsNullOrWhiteSpace(assemblyShortName))
@@ -28,7 +47,7 @@ namespace AssemblyRedirectRemover
             try
             {
                 var xmlDoc = new XmlDocument();
-                xmlDoc.Load(path);
+                xmlDoc.Load(filepath);
 
                 // Add namespace manager for XML namespace handling
                 var namespaceManager = new XmlNamespaceManager(xmlDoc.NameTable);
@@ -113,12 +132,12 @@ namespace AssemblyRedirectRemover
                 }
 
                 // Save the modified document
-                xmlDoc.Save(path);
+                xmlDoc.Save(filepath);
             }
             catch (Exception ex)
             {
                 // Log the error or rethrow based on your error handling strategy
-                throw new InvalidOperationException($"Failed to remove assembly redirects for '{assemblyShortName}' from {path}: {ex.Message}", ex);
+                throw new InvalidOperationException($"Failed to remove assembly redirects for '{assemblyShortName}' from {filepath}: {ex.Message}", ex);
             }
         }
 
