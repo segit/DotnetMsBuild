@@ -42,6 +42,8 @@ namespace AssemblyRedirectRemover
             }
         }
 
+        // TODO:
+        // Modify the procedure so if there is no assemblyShortName redirect is found it does not rewrite the file.
         /// <summary>
         /// Removes assembly redirect 
         /// <dependentAssembly>
@@ -81,11 +83,10 @@ namespace AssemblyRedirectRemover
                 var dependentAssemblyNodes = assemblyBindingNode.SelectNodes("asm:dependentAssembly", namespaceManager)
                 ?? assemblyBindingNode.SelectNodes("dependentAssembly");
         
+                var nodesToRemove = new List<XmlNode>();
+
                 if (dependentAssemblyNodes != null)
                 {
-                    // Convert to array to avoid modification during iteration
-                    var nodesToRemove = new List<XmlNode>();
-
                     foreach (XmlNode dependentAssemblyNode in dependentAssemblyNodes)
                     {
                         // Find the assemblyIdentity node within this dependentAssembly
@@ -97,12 +98,16 @@ namespace AssemblyRedirectRemover
                             nodesToRemove.Add(dependentAssemblyNode);
                         }
                     }
+                }
 
-                    // Remove the matching nodes
-                    foreach (XmlNode node in nodesToRemove)
-                    {
-                        assemblyBindingNode.RemoveChild(node);
-                    }
+                // If no matching redirects found, do not rewrite the file
+                if (nodesToRemove.Count == 0)
+                    return;
+
+                // Remove the matching nodes
+                foreach (XmlNode node in nodesToRemove)
+                {
+                    assemblyBindingNode.RemoveChild(node);
                 }
 
                 // If assemblyBinding is now empty, consider removing it and its parent runtime node if it's also empty
