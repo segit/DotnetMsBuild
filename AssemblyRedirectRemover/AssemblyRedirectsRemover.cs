@@ -2,28 +2,46 @@
 
 namespace AssemblyRedirectRemover
 {
-    //TODO:
-    // implement the procedure
-    /// <summary>
-    /// Enumerates all app.config and web.config files in the directory and subdirectories
-    /// Calls RemoveAssemblyRedirect on that file
-    /// <dependentAssembly>
-    ///   <assemblyIdentity name = "System.ValueTuple" publicKeyToken="cc7b13ffcd2ddd51" culture="neutral" />
-    ///   <bindingRedirect oldVersion = "0.0.0.0-4.0.3.0" newVersion="4.0.3.0" />
-    /// </dependentAssembly>
-    /// from the file if found.
-    /// see sample of the file:
-    /// SamplesData/App.Config
-    /// </summary>
-    /// <param name="filepath"></param>
-    /// <param name="assemblyShortName">assembly short name e.g. System.ValueTuple</param>
-    internal static void RemoveAssemblyRedirectsInDirectory(this string dir, string assemblyShortName)
-    {
-    }
-
     internal static class AssemblyRedirectsRemover
     {
-       
+        /// <summary>
+        /// Enumerates all app.config and web.config files in the directory and subdirectories
+        /// Calls RemoveAssemblyRedirect on that file
+        /// <dependentAssembly>
+        ///   <assemblyIdentity name = "System.ValueTuple" publicKeyToken="cc7b13ffcd2ddd51" culture="neutral" />
+        ///   <bindingRedirect oldVersion = "0.0.0.0-4.0.3.0" newVersion="4.0.3.0" />
+        /// </dependentAssembly>
+        /// from the file if found.
+        /// see sample of the file:
+        /// SamplesData/App.Config
+        /// </summary>
+        /// <param name="dir">The directory to search for config files</param>
+        /// <param name="assemblyShortName">assembly short name e.g. System.ValueTuple</param>
+        internal static void RemoveAssemblyRedirectsInDirectory(this string dir, string assemblyShortName)
+        {
+            if (string.IsNullOrWhiteSpace(dir))
+                return;
+
+            if (!Directory.Exists(dir))
+                return;
+
+            if (string.IsNullOrWhiteSpace(assemblyShortName))
+                return;
+
+            var configFiles = Directory.EnumerateFiles(dir, "*.config", SearchOption.AllDirectories)
+                .Where(f =>
+                {
+                    var fileName = Path.GetFileName(f);
+                    return fileName.Equals("app.config", StringComparison.OrdinalIgnoreCase) ||
+                           fileName.Equals("web.config", StringComparison.OrdinalIgnoreCase);
+                });
+
+            foreach (var configFile in configFiles)
+            {
+                configFile.RemoveAssemblyRedirect(assemblyShortName);
+            }
+        }
+
         /// <summary>
         /// Removes assembly redirect 
         /// <dependentAssembly>

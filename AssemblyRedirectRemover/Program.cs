@@ -20,5 +20,6 @@ var lf = host.Services.GetRequiredService<IHostApplicationLifetime>();
 string? wsp = Environment.GetEnvironmentVariable("wsp8");
 ArgumentException.ThrowIfNullOrWhiteSpace(wsp);
 string path = Path.Combine(wsp, "Fusion.One");
-AssemblyRedirectsRemover.RemoveAssemblyRedirect(path, "Microsoft.Extensions.AI");
+DirectoryInfo dir = new DirectoryInfo(path);
+AssemblyRedirectsRemover.RemoveAssemblyRedirectsInDirectory(path, "Microsoft.Extensions.AI");
 Console.WriteLine("Done!");
