@@ -30,7 +30,7 @@ public static class ProjectFilesEnumerator
         var solutionDir = Path.GetDirectoryName(solution)!;
         return doc.Descendants("Project")
                   .Select(e => e.Attribute("Path")?.Value)
-                  .Where(path => !string.IsNullOrEmpty(path))
+                  //.Where(path => !string.IsNullOrEmpty(path))
                   .Select(path => new FileInfo(Path.Combine(solutionDir, path!)));
     }
 }

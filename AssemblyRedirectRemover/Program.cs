@@ -16,7 +16,8 @@ var lf = host.Services.GetRequiredService<IHostApplicationLifetime>();
 //string sln = Path.GetFullPath($"{asep}/src/Ase.WebApi.slnx");
 //DotnetVersionUpdaterM
 //    .UpdateAllDotnetVersionsTo(sln, new string[] { "8.0", "9.0" }, "net10.0");
-
+/ new NugetPmSlnRefCentralizer()
+//    .MovePackageVersionsToCentralStore(sln);
 string? wsp = Environment.GetEnvironmentVariable("wsp8");
 ArgumentException.ThrowIfNullOrWhiteSpace(wsp);
 string path = Path.Combine(wsp, "Fusion.One");

@@ -69,7 +69,7 @@ namespace MsBuildUtils
                     .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
                 bool added = false;
-
+                bool removed = false;
                 foreach (var packageRef in packageReferences)
                 {
                     var packageName = packageRef.Attribute("Include")?.Value;
@@ -90,16 +90,19 @@ namespace MsBuildUtils
 
                     // Remove the Version attribute from the PackageReference element
                     packageRef.Attribute("Version")?.Remove();
+                    removed = true;
                 }
 
                 if (added)
                 {
                     propsDoc.Save(packagesProps);
+                }
+                if (removed)
+                {
                     projDoc.Save(csProj);
-                    return true;
                 }
 
-                return false;
+                return added || removed;
             }
             catch (Exception ex) when (!(ex is ArgumentException) && !(ex is FileNotFoundException))
             {

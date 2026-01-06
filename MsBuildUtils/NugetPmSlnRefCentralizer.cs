@@ -27,7 +27,7 @@ namespace MsBuildUtils
             if (!File.Exists(packagesPropsPath))
                 throw new FileNotFoundException($"Directory.Packages.props file not found in solution directory.", packagesPropsPath);
 
-            var projectFiles = ProjectFilesEnumerator.EnumerateAsFi(sln);
+            var projectFiles = ProjectFilesEnumerator.EnumerateAsFi(sln).ToList();
 
             foreach (var projectFile in projectFiles)
             {
