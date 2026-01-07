@@ -20,7 +20,7 @@ var lf = host.Services.GetRequiredService<IHostApplicationLifetime>();
 // new NugetPmSlnRefCentralizer()
 //    .MovePackageVersionsToCentralStore(sln);
 
-//string? wsp = Environment.GetEnvironmentVariable("wsp8");
+//string? wsp = Environment.GetEnvironmentVariable("wsp2");
 //ArgumentException.ThrowIfNullOrWhiteSpace(wsp);
 //string path = Path.Combine(wsp, "Fusion.One");
 //DirectoryInfo dir = new DirectoryInfo(path);

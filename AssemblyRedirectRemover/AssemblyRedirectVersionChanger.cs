@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.IO;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace AssemblyRedirectRemover
 {
@@ -28,6 +30,8 @@ namespace AssemblyRedirectRemover
         ///         assemblyShortName = "System.ValueTuple"
         ///         range = "0.0.0.0-4.0.5.0"
         ///         newVersion = "4.0.0.0"
+        /// 
+        /// 
         /// </summary>
         /// <remarks>This method updates the assembly binding redirect in the configuration file located
         /// at the specified path. Ensure that the file is accessible and writable before calling this method.</remarks>
@@ -132,3 +136,7 @@ namespace AssemblyRedirectRemover
         }
     }
 }
+//      <dependentAssembly>
+//        <assemblyIdentity name = "Microsoft.Extensions.AI" publicKeyToken = "31bf3856ad364e35" culture = "neutral" />
+//        <bindingRedirect oldVersion = "0.0.0.0-10.1.0.0" newVersion = "10.1.0.0" />
+//      </ dependentAssembly >
